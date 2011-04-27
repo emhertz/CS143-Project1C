@@ -30,7 +30,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	<tr bgcolor="0038A8">
 		<td align="center"><font color="FFFFFF">
 			<form action="./actor.php" method="POST">
-			<select name="movie">
+			<select name="actor">
 			<?php
 			while($row = mysql_fetch_assoc($result)) {
 				echo "<option value='" . $row['id'] . "'>";

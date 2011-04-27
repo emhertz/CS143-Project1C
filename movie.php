@@ -3,10 +3,8 @@
 
 <?php
 require($DOCUMENT_ROOT . "./menu_bar.html");
-?>
-<title>CS 143 Movie Database</title>
 
-<?php
+	$id= $_POST["movie"];
 
 	$db_connection = mysql_connect("localhost", "cs143", "");
 	if(!$db_connection) {
@@ -17,34 +15,27 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 
 	mysql_select_db("CS143", $db_connection);
 
-	$result = mysql_query("SELECT title, year, id FROM Movie ORDER BY title", $db_connection);
+	$result = mysql_query("SELECT * FROM Movie WHERE id = " . $id, $db_connection);
 	if(!$result) {
 		$message = "Invalid query: " . mysql_error() . "\n";
 		die($message);
 	}
-?>
 
+?>
+<title>CS 143 Movie Database</title>
 
 <link rel="stylesheet" type="text/css" media="all" href="searchsm.css">
 <table align="center" width="650" class="searchtablesm" bgcolor="0038A8">
 	<tr bgcolor="0038A8">
 		<td align="center"><font color="FFFFFF">
-			<form action="./movie.php" method="POST">
-			<select name="movie">
-			<?php
-			while($row = mysql_fetch_assoc($result)) {
-				echo "<option value='" . $row['id'] . "'>";
-				echo $row['title'];
-				echo "</option>";
-			}
-			?>
-			</option>
-			</select>
-			<input type="submit" value="Search"/>
-			</form>
-			<hr/></font>
+		<?php
+		$row = mysql_fetch_assoc($result);
+		echo "Title: " . $row['title'] . "<br>";
+		?> 
+		</font>
 		</td>
 	</tr>
 </table>
+
 </body>
-</html> 
+</html>
