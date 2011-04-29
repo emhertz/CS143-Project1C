@@ -20,6 +20,9 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	$actor = mysql_query("SELECT * FROM MovieActor WHERE mid = $id ORDER BY aid", $db_connection);
 	
 	$actor_info = mysql_query("SELECT * FROM Actor WHERE id in ($actor_query) ORDER BY id", $db_connection);
+	$dir_info = mysql_query("SELECT * FROM Director where id in (SELECT did FROM MovieDirector where mid = $id)");
+	$comment = mysql_query("SELECT * FROM Review where mid = $id");
+	
 
 ?>
 <title>CS 143 Movie Database</title>
@@ -38,6 +41,29 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		</font>
 		</td>
 	</tr>
+</table>
+<br/>
+<table align="center" width="650" class="searchtablesm" bgcolor="0038A8">
+	<tr bgcolor="0038A8">
+		<td align="center" colspan="3"><font color="FFFFFF">
+		Director Information
+		</td>
+	</tr>
+	<?php
+		while($row_info = mysql_fetch_assoc($dir_info)) {
+			print "<tr bgcolor='0038A8'>";
+			print "<td align='center'><font color='FFFFFF'>";
+			print "Name: " . $row_info['first'] . " " . $row_info['last'];
+			print "</td><td align='center'><font color='FFFFFF'>";
+			print "DOB: " . $row_info['dob'];
+			print "</td><td align='center'><font color='FFFFFF'>";
+			print "DOD: " . $row_info['dod'];
+			print "</td></tr>";
+		}
+	?>
+</table>
+<br/>
+<table align="center" width="650" class="searchtablesm" bgcolor="0038A8">
 	<tr bgcolor="0038A8">
 		<td align="center" colspan="5"><font color="FFFFFF">
 		Actor Information
@@ -59,8 +85,34 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			print "Role: " . $row['role'];
 			print "</td></tr>";
 		}
+	?>		
+</table>
+<br/>
+<table align="center" width="650" class="searchtablesm" bgcolor="0038A8">
+	<tr bgcolor="0038A8">
+		<td align="center" colspan="5"><font color="FFFFFF">
+		Reviews
+		</td>
+	</tr>
+	<?php
+		while($row = mysql_fetch_assoc($comment)) {
+			$row_info = mysql_fetch_assoc($comment);
+			print "<tr bgcolor='0038A8'>";
+			print "<td align='center'><font color='FFFFFF'>";
+			print "Reviewer: " . $row_info['name'];
+			print "</td><td align='center'><font color='FFFFFF'>";
+			print "Time: " . $row_info['time'];
+			print "</td><td align='center'><font color='FFFFFF'>";
+			print "Rating: " . $row_info['time'];
+			print "</td></tr><br/>";
+			print "<tr bgcolor='0038A8'>";
+			print "<td align='center'><font color='FFFFFF'>";
+			print "Review: ";
+			print "</td><td align='center'><font color='FFFFFF'>";
+			print $row_info['comment'];
+			print "</td></tr>";
+		}
 	?>
-			
 </table>
 
 </body>
