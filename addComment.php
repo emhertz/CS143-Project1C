@@ -8,7 +8,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 
 <?php
 	$comment = $_POST["comment"];
-	$mid = $_POST["mid"];
+	$title = $_POST["title"];
 	$name = $_POST["name"];
 	$rating = $_POST["rating"];
 
@@ -21,28 +21,25 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 
 	mysql_select_db("CS143", $db_connection);
 
-	# Sanitize input
-	$comment = mysql_real_escape_string($comment, $db_connection);
-	$mid = mysql_real_escape_string($mid, $db_connection);
-	$name = mysql_real_escape_string($name, $db_connection);
-	$rating = mysql_real_escape_string($rating, $db_connection);
+	$movie_query = "SELECT * from Movie order by title";
+	$movie_res = mysql_query($movie_query, $db_connection);
 
-	if (!is_numeric($rating))
-		$rating = 0;
+	$id = 0;
 
-	$result = mysql_query("INSERT VALUES(" . $name . ", " . CURRENT_TIMESTAMP() . ", " . $mid . ", " . $rating . ", " $comment . ") INTO Review", $db_connection);
-	if (!$result) {
-		$result = mysql_query("UPDATE Review SET time = " . CURRENT_TIMESTAMP() . ", rating = " . $rating . ", comment = " . $comment . " WHERE name = ". $name . " AND mid = " $mid, $db_connection);
-		if (!result) {
-			$message = "Invalid query: " . mysql_error() . "\n";
-			die($message);
-		} else {
-			print "Review updated!";
-		}
-	} else {
-		print "Review posted!";
-	}
-		
+	if($title) {
+		$movie_query_new = "SELECT id from Movie where title='$title'";
+		$movie_res_new = mysql_query($movie_query_new, $db_connection);
+		$row = mysql_fetch_assoc($movie_res_new);
+		$id = $row['id'];
+	
+		# Sanitize input
+		$comment = mysql_real_escape_string($comment, $db_connection);
+		$name = mysql_real_escape_string($name, $db_connection);
+		$rating = mysql_real_escape_string($rating, $db_connection);
+
+		$query = "INSERT INTO Review VALUES('$name', CURRENT_TIMESTAMP(), $id, $rating, '$comment')";
+		$result = mysql_query($query, $db_connection);
+	}	
 ?>
 
 <link rel="stylesheet" type="text/css" media="all" href="searchsm.css">
@@ -50,12 +47,27 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	<tr bgcolor="0038A8">
 		<td align="center"><font color="FFFFFF">
 			<form action="./addComment.php" method="POST">
-			Name:<br/>
-			<input type="text" name="name" maxlength="100" width="100"><br/><br/>
-			Comment:<br/>
+			Movie:
+			<select name="title">
+			<?php
+				while($row = mysql_fetch_assoc($movie_res)) {
+					$title = $row['title'];
+					print "<option value='".$title."'>$title</option>";
+				}
+			?>
+			</select><br/>
+			Name:
+			<input type="text" name="name" maxlength="100" width="100"><br/>
+			Comment:
 			<textarea name="comment" cols="40" rows="5"></textarea><br/>
-			Rating:<br/>
-			<input type="text" name="name" maxlength="1" width="100"><br/><br/>
+			Rating:
+			<select name="rating">
+			<option value="5">5</option>
+			<option value="4">4</option>
+			<option value="3">3</option>
+			<option value="2">2</option>
+			<option value="1">1</option>
+			</select><br/>
 			<input type="submit" value="Comment"/>
 			</form>
 			<hr/></font>

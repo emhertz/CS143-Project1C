@@ -30,6 +30,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	<tr bgcolor="0038A8">
 		<td align="center"><font color="FFFFFF">
 			<form action="./movie.php" method="POST">
+			Movie:
 			<select name="movie">
 			<?php
 			while($row = mysql_fetch_assoc($result)) {

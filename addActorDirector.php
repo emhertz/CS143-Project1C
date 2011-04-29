@@ -31,63 +31,48 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	$dob = mysql_real_escape_string($dob, $db_connection);
 	$dod = mysql_real_escape_string($dod, $db_connection);
 
-	if($sex == "Male") {
-		$sex = "M";
-	} else {
-		$sex = "F";
-	}
-
 	if($identity == "Actor") {
-		print("Inserting into Actor.");
 		$resID = mysql_query("SELECT id FROM MaxPersonID");
 		$row = mysql_fetch_assoc($resID);
 		$id = $row['id'];
-		print("ID: $id");
 		$id = $id + 1;
-		print("ID: $id");
-		$result = mysql_query("INSERT INTO Actor VALUES($id, '$first', '$last', '$sex', '$dob', '$dod')");
+		$result = mysql_query("INSERT INTO Actor VALUES($id, '$last', '$first', '$sex', '$dob', '$dod')");
 		if($result) {
-			print("Success!");
+
 		} else {
-			print("Failed.");
+
 		}
 		mysql_query("UPDATE MaxPersonID SET id=$id");
 	} else if($identity == "Director") {
-		print("Inserting into Director.");
 		$resID = mysql_query("SELECT id from MaxPersonID");
 		$row = mysql_fetch_assoc($resID);
 		$id = $row['id'];
 		$id = $id + 1;
-		$result = mysql_query("INSERT INTO Director VALUES($id, '$first', '$last', '$dob', '$dod')");
+		$result = mysql_query("INSERT INTO Director VALUES($id, '$last', '$first', '$dob', '$dod')");
 		if($result) {
-			print("Success!");
 		} else {
-			print("Failed.");
 		}
 		mysql_query("UPDATE MaxPersonID SET id=$id");
 	} else if($identity == "Both") {
-		print("Adding both.");
 		$resID = mysql_query("SELECT id FROM MaxPersonID");
 		$row = mysql_fetch_assoc($resID);
 		$id = $row['id'];
-		print("ID: $id");
 		$id = $id + 1;
-		print("ID: $id");
-		$result = mysql_query("INSERT INTO Actor VALUES($id, '$first', '$last', '$sex', '$dob', '$dod')");
+		$result = mysql_query("INSERT INTO Actor VALUES($id, '$last', '$first', '$sex', '$dob', '$dod')");
 		if($result) {
-			print("Success!");
+
 		} else {
-			print("Failed.");
+
 		}
-		$result = mysql_query("INSERT INTO Director VALUES($id, '$first', '$last', '$dob', '$dod')");
+		$result = mysql_query("INSERT INTO Director VALUES($id, '$last', '$first', '$dob', '$dod')");
 		if($result) {
-			print("Success!");
+
 		} else {
-			print("Failed.");
+
 		}
 		mysql_query("UPDATE MaxPersonID SET id=$id");
 	} else {
-		print("Not doing anything.");
+
 	}	
 
 		

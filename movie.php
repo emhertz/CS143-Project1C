@@ -16,10 +16,10 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	mysql_select_db("CS143", $db_connection);
 
 	$result = mysql_query("SELECT * FROM Movie WHERE id = " . $id, $db_connection);
-	if(!$result) {
-		$message = "Invalid query: " . mysql_error() . "\n";
-		die($message);
-	}
+	$actor_query = "SELECT aid FROM MovieActor WHERE mid = " . $id;
+	$actor = mysql_query("SELECT * FROM MovieActor WHERE mid = $id ORDER BY aid", $db_connection);
+	
+	$actor_info = mysql_query("SELECT * FROM Actor WHERE id in ($actor_query) ORDER BY id", $db_connection);
 
 ?>
 <title>CS 143 Movie Database</title>
@@ -27,14 +27,40 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 <link rel="stylesheet" type="text/css" media="all" href="searchsm.css">
 <table align="center" width="650" class="searchtablesm" bgcolor="0038A8">
 	<tr bgcolor="0038A8">
-		<td align="center"><font color="FFFFFF">
+		<td align="center" colspan="5"><font color="FFFFFF">
 		<?php
 		$row = mysql_fetch_assoc($result);
 		echo "Title: " . $row['title'] . "<br>";
+		echo "Year: " . $row['year'] . "<br>";
+		echo "MPAA Rating: " . $row['rating'] . "<br>";
+		echo "Company: " . $row['company'] . "<br>";
 		?> 
 		</font>
 		</td>
 	</tr>
+	<tr bgcolor="0038A8">
+		<td align="center" colspan="5"><font color="FFFFFF">
+		Actor Information
+		</td>
+	</tr>
+	<?php
+		while($row = mysql_fetch_assoc($actor)) {
+			$row_info = mysql_fetch_assoc($actor_info);
+			print "<tr bgcolor='0038A8'>";
+			print "<td align='center'><font color='FFFFFF'>";
+			print "Name: " . $row_info['first'] . " " . $row_info['last'];
+			print "</td><td align='center'><font color='FFFFFF'>";
+			print "Sex: " . $row_info['sex'];
+			print "</td><td align='center'><font color='FFFFFF'>";
+			print "DOB: " . $row_info['dob'];
+			print "</td><td align='center'><font color='FFFFFF'>";
+			print "DOD: " . $row_info['dod'];
+			print "</td><td align='center'><font color='FFFFFF'>";
+			print "Role: " . $row['role'];
+			print "</td></tr>";
+		}
+	?>
+			
 </table>
 
 </body>
