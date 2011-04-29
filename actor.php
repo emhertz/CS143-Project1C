@@ -29,8 +29,35 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	<tr bgcolor="0038A8">
 		<td align="center"><font color="FFFFFF">
 		<?php
-		$row = mysql_fetch_assoc($result);
-		echo "Name: " . $row['first'] . " " . $row['last'] . "<br>";
+			$submit = $_POST["submit"];
+			
+			$row = mysql_fetch_assoc($result);
+			echo "Name: " . $row['first'] . " " . $row['last'] . "<br>";
+			
+			$roles = mysql_query("SELECT role, title FROM MovieActor MA, Movie M WHERE aid = " . $id . " AND mid = id", $db_connection);
+			if (!$roles) {
+				$message = "Invalid query: " . mysql_error() . "\n";
+				die($message);
+			}
+
+			echo "<br/><br/>";
+			echo "<table align='center' class='searchtablesm' width='500'>";
+			
+			$i = 0;
+			print "<tr align='center'><td><font color='FFFFFF'><u>Role</u></font></td><td><font color='FFFFFF'><u>Movie</u></font></td></tr>";
+				
+			while ($movie_row = mysql_fetch_row($roles)) {
+				print "<tr align='center'>";
+				$i = 0;
+				while ($i < mysql_num_fields($roles)) {
+					if ($movie_row[$i] == "")
+						print "<td>N/A</td>";
+					else
+						print "<td><font color='FFFFFF'>" . $movie_row[$i] . "</font></td>";
+					$i++;
+				}
+				print "</tr>\n";
+			}
 		?> 
 		</font>
 		</td>
