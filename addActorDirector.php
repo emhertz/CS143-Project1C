@@ -31,13 +31,66 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	$dob = mysql_real_escape_string($dob, $db_connection);
 	$dod = mysql_real_escape_string($dod, $db_connection);
 
+	if($sex == "Male") {
+		$sex = "M";
+	} else {
+		$sex = "F";
+	}
+
 	if($identity == "Actor") {
 		print("Inserting into Actor.");
+		$resID = mysql_query("SELECT id FROM MaxPersonID");
+		$row = mysql_fetch_assoc($resID);
+		$id = $row['id'];
+		print("ID: $id");
+		$id = $id + 1;
+		print("ID: $id");
+		$result = mysql_query("INSERT INTO Actor VALUES($id, '$first', '$last', '$sex', '$dob', '$dod')");
+		if($result) {
+			print("Success!");
+		} else {
+			print("Failed.");
+		}
+		mysql_query("UPDATE MaxPersonID SET id=$id");
 	} else if($identity == "Director") {
 		print("Inserting into Director.");
+		$resID = mysql_query("SELECT id from MaxPersonID");
+		$row = mysql_fetch_assoc($resID);
+		$id = $row['id'];
+		$id = $id + 1;
+		$result = mysql_query("INSERT INTO Director VALUES($id, '$first', '$last', '$dob', '$dod')");
+		if($result) {
+			print("Success!");
+		} else {
+			print("Failed.");
+		}
+		mysql_query("UPDATE MaxPersonID SET id=$id");
+	} else if($identity == "Both") {
+		print("Adding both.");
+		$resID = mysql_query("SELECT id FROM MaxPersonID");
+		$row = mysql_fetch_assoc($resID);
+		$id = $row['id'];
+		print("ID: $id");
+		$id = $id + 1;
+		print("ID: $id");
+		$result = mysql_query("INSERT INTO Actor VALUES($id, '$first', '$last', '$sex', '$dob', '$dod')");
+		if($result) {
+			print("Success!");
+		} else {
+			print("Failed.");
+		}
+		$result = mysql_query("INSERT INTO Director VALUES($id, '$first', '$last', '$dob', '$dod')");
+		if($result) {
+			print("Success!");
+		} else {
+			print("Failed.");
+		}
+		mysql_query("UPDATE MaxPersonID SET id=$id");
 	} else {
 		print("Not doing anything.");
-	}		
+	}	
+
+		
 
 ?>
 
@@ -49,6 +102,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 				Identity:
 			<input type="radio" name="identity" value="Actor" checked="true">Actor
 			<input type="radio" name="identity" value="Director">Director<br/>
+			<input type="radio" name="identity" value="Both">Both<br/>
 			<hr/>
 			First Name:
 			<input type="text" name="first" maxlength="20"><br/>
@@ -62,6 +116,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			Date of Death:
 			<input type="text" name="dod"><br/>
 			<input type="submit" value="Add Info"/>
+			<input type="button" value="Clear Form" onClick="this.form.reset()"/>
 			</form>
 			<hr/></font>
 		</td>
