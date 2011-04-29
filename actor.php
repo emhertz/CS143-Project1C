@@ -33,6 +33,9 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			
 			$row = mysql_fetch_assoc($result);
 			echo "Name: " . $row['first'] . " " . $row['last'] . "<br>";
+			echo "Sex: " . $row['sex'] . "<br>";
+			echo "DOB: " . $row['dob'] . "<br>";
+			echo "DOD: " . $row['dod'] . "<br>";
 			
 			$roles = mysql_query("SELECT role, title FROM MovieActor MA, Movie M WHERE aid = " . $id . " AND mid = id", $db_connection);
 			if (!$roles) {
