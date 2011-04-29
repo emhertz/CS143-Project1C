@@ -26,7 +26,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	$mid = mysql_real_escape_string($mid, $db_connection);
 	$name = mysql_real_escape_string($name, $db_connection);
 	$rating = mysql_real_escape_string($rating, $db_connection);
-	
+
 	if (!is_numeric($rating))
 		$rating = 0;
 
