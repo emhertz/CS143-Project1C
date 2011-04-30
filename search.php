@@ -50,6 +50,8 @@ function generateFields() {
 	}
 
 	if(id_value == "Person") {
+		addRadio(td, "mode", "AND ", "radio");
+		addRadio(td, "mode", "OR ", "radio");
 		addField(td, "first", "First Name: ", "textfield");
 		addField(td, "last", "Last Name: ", "textfield");
 		addRadio(td, "sex", "Male", "radio");
@@ -60,6 +62,8 @@ function generateFields() {
 		var tdH = td.innerHTML;
 		td.innerHTML = "<form action='./searchDriver.php' name='searchform' method='POST'><font color='FFFFFF'><input type='hidden' name='id' value='Person'>" + tdH;
 	} else {
+		addRadio(td, "mode", "AND ", "radio");
+		addRadio(td, "mode", "OR ", "radio");
 		addField(td, "title", "Title: ", "textfield");
 		addField(td, "year", "Year: ", "textfield");
 		addField(td, "rating", "Rating: ", "textfield");

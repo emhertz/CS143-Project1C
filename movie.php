@@ -26,6 +26,9 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	$average_rank = mysql_query("SELECT AVG(rating) AS rating from Review where mid = " . $id);
 	$rank_result = mysql_fetch_assoc($average_rank);
 	$avg = $rank_result['rating'];
+	if(!$avg) {
+		$avg = 0;
+	}
 ?>
 
 <script type='text/javascript'>
@@ -65,15 +68,26 @@ function sendForm1(form, id) {
 		Director Information
 		</td>
 	</tr>
+	<tr bgcolor="0038A8">
+		<td align='center'><font color='FFFFF'>
+		Name
+		</td>
+		<td align='center'><font color='FFFFF'>
+		DOB
+		</td>
+		<td align='center'><font color='FFFFF'>
+		DOD
+		</td>
+	</tr>
 	<?php
 		while($row_info = mysql_fetch_assoc($dir_info)) {
 			print "<tr bgcolor='0038A8'>";
 			print "<td align='center'><font color='FFFFFF'>";
-			print "Name: " . $row_info['first'] . " " . $row_info['last'];
+			print $row_info['first'] . " " . $row_info['last'];
 			print "</td><td align='center'><font color='FFFFFF'>";
-			print "DOB: " . $row_info['dob'];
+			print $row_info['dob'];
 			print "</td><td align='center'><font color='FFFFFF'>";
-			print "DOD: " . $row_info['dod'];
+			print $row_info['dod'];
 			print "</td></tr>";
 		}
 	?>
@@ -85,6 +99,23 @@ function sendForm1(form, id) {
 		Actor Information
 		</td>
 	</tr>
+	<tr bgcolor="0038A8">
+		<td align='center'><font color='FFFFF'>
+		Name
+		</td>
+		<td align='center'><font color='FFFFF'>
+		Sex
+		</td>
+		<td align='center'><font color='FFFFF'>
+		DOB
+		</td>
+		<td align='center'><font color='FFFFF'>
+		DOD
+		</td>
+		<td align='center'><font color='FFFFF'>
+		Role
+		</td>
+	</tr>
 	<?php
 		while($row = mysql_fetch_assoc($actor)) {
 			$row_info = mysql_fetch_assoc($actor_info);
@@ -94,28 +125,27 @@ function sendForm1(form, id) {
 			print "<form name='$form_name' method='POST' action='./actor.php'>";
 			print "<input type='hidden' name='actor' value='$id'>";
 			print "<td align='center'><font color='FFFFFF'>";
-			print "<a href='#' onclick='document.$form_name.submit();return false;'>Name: " . $row_info['first'] . " " . $row_info['last'];
+			print "<a href='#' onclick='document.$form_name.submit();return false;'>".$row_info['first'] . " " . $row_info['last'];
 			print "</a></td><td align='center'><font color='FFFFFF'>";
-			print "Sex: " . $row_info['sex'];
+			print $row_info['sex'];
 			print "</td><td align='center'><font color='FFFFFF'>";
-			print "DOB: " . $row_info['dob'];
+			print $row_info['dob'];
 			print "</td><td align='center'><font color='FFFFFF'>";
-			print "DOD: " . $row_info['dod'];
+			print $row_info['dod'];
 			print "</td><td align='center'><font color='FFFFFF'>";
-			print "Role: " . $row['role'];
-			print "</td></tr></form>";
+			print $row['role'];
+			print "</td></form></tr>";
 		}
 	?>		
 </table>
-</form>
 <br/>
-<form name="reviewForm" method="POST" action="./addComment.php">
 <table align="center" width="650" class="searchtablesm" bgcolor="0038A8">
 	<tr bgcolor="0038A8">
 		<td align="center" colspan="5"><font color="FFFFFF">
 		Reviews
 		</td>
 	</tr>
+	<form name="reviewForm" method="POST" action="./addComment.php">
 	<?php
 		print "<input type='hidden' name='movie' value='$id'/>";
 		while($row_info = mysql_fetch_assoc($comment)) {
@@ -125,7 +155,7 @@ function sendForm1(form, id) {
 			print "</td><td align='center'><font color='FFFFFF'>";
 			print "Time: " . $row_info['time'];
 			print "</td><td align='center'><font color='FFFFFF'>";
-			print "Rating: " . $row_info['time'];
+			print "Rating: " . $row_info['rating'];
 			print "</td></tr><br/>";
 			print "<tr bgcolor='0038A8'>";
 			print "<td align='center'><font color='FFFFFF'>";
@@ -140,6 +170,7 @@ function sendForm1(form, id) {
 		<input type="submit" value="Add a comment!"/>
 		</td>
 	</tr>
+	</form>
 </table>
 
 </body>

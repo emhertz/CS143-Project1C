@@ -1,5 +1,5 @@
 <html>
-<body>
+<body link="FFFFFF" alink="FFFFFF" vlink="FFFFFF">
 
 <?php
 require($DOCUMENT_ROOT . "./menu_bar.html");
@@ -9,7 +9,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 <?php
 	# Functions will go here
 
-	function print_info($result) {
+	function print_info($result, $type) {
 		$i = 0;
 		if($result == 0) {
 			print "<td><font color='FFFFFF'><b>" . "No arguments provided." . "</b></font></td>";
@@ -20,20 +20,35 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 				$i++;
 			}
 			print "</tr>";
-	
+
+			$arr = preg_split("/[\/]/", $type);
+			$value = $arr[1];
+			
+			$arr = preg_split("/[\.]/", $value);
+			$value = $arr[0];
+
+			$ind = 0;
 			while($row = mysql_fetch_row($result)) {
 				print "<tr align='center'>";
 				$i = 0;
-				print "<form name='myForm".$i."' action='POST'>";
+				$form_name = "myForm" . $ind;
+				print "<form name='myForm".$ind."' method='POST' action='".$type."'>";
 				while($i < mysql_num_fields($result)) {
-					if($row[$i] == "") {
-						print "<td><font color='FFFFFF'>N/A</font></td>";
+					if($i == 0) {
+						print "<input type='hidden' name='".$value."' value='$row[$i]'/>";
+						print "<td align='center'><font color='FFFFFF'>";
+						print "<a href='".$type."?".$value."=".$row[$i]."' onClick='document.$form_name.submit();return false;'>".$row[$i]."</a>";
+						print "</font></td>";
 					} else {
-						
-						print "<td><font color='FFFFFF'>" . $row[$i] . "</font></td>";
+						if($row[$i] == "") {
+							print "<td><font color='FFFFFF'>N/A</font></td>";
+						} else {
+							print "<td><font color='FFFFFF'>" . $row[$i] . "</font></td>";
+						}
 					}
 					$i++;
 				}
+				$ind++;
 				print "</form></tr>\n";
 			}
 			print "</table>";
@@ -51,6 +66,11 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 
 	mysql_select_db("CS143", $db_connection);
 
+	$mode = $_POST['mode'];
+	if(! $mode) {
+		$mode = "AND ";
+	}
+
 	if( $_POST['id'] == "Person" ) {
 		$first = $_POST['first'];
 		$last = $_POST['last'];
@@ -67,7 +87,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 		if($last) {
 			if($append == 1) {
-				$base_query .= "AND last='$last' ";
+				$base_query = $base_query . $mode . "last='$last' ";
 			} else {
 				$base_query .= "last='$last' ";
 				$append = 1;
@@ -75,7 +95,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 		if($sex) {
 			if($append == 1) {
-				$base_query .= "AND sex='$sex' ";
+				$base_query = $base_query . $mode . "sex='$sex' ";
 			} else {
 				$base_query .= "sex='$sex' ";
 				$append = 1;
@@ -83,7 +103,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 		if($dob) {
 			if($append == 1) {
-				$base_query .= "AND dob='$dob' ";
+				$base_query = $base_query . $mode . "dob='$dob' ";
 			} else {
 				$base_query .= "dob='$dob' ";
 				$append = 1;
@@ -91,7 +111,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 		if($dod) {
 			if($append == 1) {
-				$base_query .= "AND dod='$dod' ";
+				$base_query = $base_query . $mode . "dod='$dod' ";
 			} else {
 				$base_query .= "dod='$dod' ";
 				$append = 1;
@@ -113,7 +133,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 		if($last) {
 			if($append == 1) {
-				$base_query_director .= "AND last='$last' ";
+				$base_query_director = $base_query_director . $mode . "last='$last' ";
 			} else {
 				$base_query_director .= "last='$last' ";
 				$append = 1;
@@ -121,7 +141,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 		if($dob) {
 			if($append == 1) {
-				$base_query_director .= "AND dob='$dob' ";
+				$base_query_director = $base_query_director . $mode . "dob='$dob' ";
 			} else {
 				$base_query_director .= "dob='$dob' ";
 				$append = 1;
@@ -129,7 +149,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 		if($dod) {
 			if($append == 1) {
-				$base_query_director .= "AND dod='$dod' ";
+				$base_query_director = $base_query_director . $mode . "dod='$dod' ";
 			} else {
 				$base_query_director .= "dod='$dod' ";
 				$append = 1;
@@ -153,14 +173,14 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 
 		print "<tr bgcolor='0038A8' align='center'>";
 		
-		print_info($result_actor);
+		print_info($result_actor, "./actor.php");
 		
 		print "<table align='center' width='650' class='searchtablesm' bgcolor='0038A8'>";
 		print "<tr bgcolor='0038A8'><td align='center' colspan='5'><font color='FFFFFF'>Director Results</font></td></tr>";
 		
 		print "<tr bgcolor='0038A8' align='center'>";
 		
-		print_info($result_director);
+		print_info($result_director, "./director.php");
 
 	} else if( $_POST['id'] == "Movie" ) {
 		$title = $_POST['title'];
@@ -177,7 +197,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 		if($rating) {
 			if($append == 1) {
-				$base_query_movie .= "AND rating='$rating' ";
+				$base_query_movie = $base_query_movie . $mode . "rating='$rating' ";
 			} else {
 				$base_query_movie .= "rating='$rating' ";
 				$append = 1;
@@ -185,7 +205,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 		if($year) {
 			if($append == 1) {
-				$base_query_movie .= "AND year=$year ";
+				$base_query_movie = $base_query_movie . $mode . "year=$year ";
 			} else {
 				$base_query_movie .= "year=$year ";
 				$append = 1;
@@ -193,7 +213,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 		if($company) {
 			if($append == 1) {
-				$base_query_movie .= "AND company='$company' ";
+				$base_query_movie = $base_query_movie . $mode . "company='$company' ";
 			} else {
 				$base_query_movie .= "company='$company' ";
 				$append = 1;
@@ -217,7 +237,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 
 		print "<tr bgcolor='0038A8' align='center'>";
 		
-		print_info($result_movie);	
+		print_info($result_movie, "./movie.php");	
 	} else {
 		echo "<h1>OH GOD FATAL ERROR SHUT DOWN THE MAINFRAME</h1>";
 	}
