@@ -15,16 +15,16 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 
 	mysql_select_db("CS143", $db_connection);
 
-	$result = mysql_query("SELECT * FROM Movie WHERE id = " . $id, $db_connection);
+	$result = @mysql_query("SELECT * FROM Movie WHERE id = " . $id, $db_connection);
 	$actor_query = "SELECT aid FROM MovieActor WHERE mid = " . $id;
-	$actor = mysql_query("SELECT * FROM MovieActor WHERE mid = $id ORDER BY aid", $db_connection);
+	$actor = @mysql_query("SELECT * FROM MovieActor WHERE mid = $id ORDER BY aid", $db_connection);
 	
-	$actor_info = mysql_query("SELECT * FROM Actor WHERE id in ($actor_query) ORDER BY id", $db_connection);
-	$dir_info = mysql_query("SELECT * FROM Director where id in (SELECT did FROM MovieDirector where mid = $id)");
-	$comment = mysql_query("SELECT * FROM Review where mid = $id");
+	$actor_info = @mysql_query("SELECT * FROM Actor WHERE id in ($actor_query) ORDER BY id", $db_connection);
+	$dir_info = @mysql_query("SELECT * FROM Director where id in (SELECT did FROM MovieDirector where mid = $id)");
+	$comment = @mysql_query("SELECT * FROM Review where mid = $id");
 	
-	$average_rank = mysql_query("SELECT AVG(rating) AS rating from Review where mid = " . $id);
-	$rank_result = mysql_fetch_assoc($average_rank);
+	$average_rank = @mysql_query("SELECT AVG(rating) AS rating from Review where mid = " . $id);
+	$rank_result = @mysql_fetch_assoc($average_rank);
 	$avg = $rank_result['rating'];
 	if(!$avg) {
 		$avg = 0;
@@ -50,7 +50,7 @@ function sendForm1(form, id) {
 	<tr bgcolor="0038A8">
 		<td align="center" colspan="5"><font color="FFFFFF">
 		<?php
-		$row = mysql_fetch_assoc($result);
+		$row = @mysql_fetch_assoc($result);
 		echo "Title: " . $row['title'] . "<br>";
 		echo "Year: " . $row['year'] . "<br>";
 		echo "MPAA Rating: " . $row['rating'] . "<br>";
@@ -80,7 +80,7 @@ function sendForm1(form, id) {
 		</td>
 	</tr>
 	<?php
-		while($row_info = mysql_fetch_assoc($dir_info)) {
+		while($row_info = @mysql_fetch_assoc($dir_info)) {
 			print "<tr bgcolor='0038A8'>";
 			print "<td align='center'><font color='FFFFFF'>";
 			print $row_info['first'] . " " . $row_info['last'];
@@ -117,8 +117,8 @@ function sendForm1(form, id) {
 		</td>
 	</tr>
 	<?php
-		while($row = mysql_fetch_assoc($actor)) {
-			$row_info = mysql_fetch_assoc($actor_info);
+		while($row = @mysql_fetch_assoc($actor)) {
+			$row_info = @mysql_fetch_assoc($actor_info);
 			$id = $row_info['id'];
 			$form_name = "actorForm" . $id;
 			print "<tr bgcolor='0038A8'>";
@@ -148,7 +148,7 @@ function sendForm1(form, id) {
 	<form name="reviewForm" method="POST" action="./addComment.php">
 	<?php
 		print "<input type='hidden' name='movie' value='$id'/>";
-		while($row_info = mysql_fetch_assoc($comment)) {
+		while($row_info = @mysql_fetch_assoc($comment)) {
 			print "<tr bgcolor='0038A8'>";
 			print "<td align='center'><font color='FFFFFF'>";
 			print "Reviewer: " . $row_info['name'];

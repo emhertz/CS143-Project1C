@@ -17,7 +17,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 
 	mysql_select_db("CS143", $db_connection);
 
-	$result = mysql_query("SELECT * FROM Actor ORDER BY last", $db_connection);
+	$result = @mysql_query("SELECT * FROM Actor ORDER BY last", $db_connection);
 	if(!$result) {
 		$message = "Invalid query: " . mysql_error() . "\n";
 		die($message);
@@ -32,7 +32,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			<form action="./actor.php" method="POST">
 			<select name="actor">
 			<?php
-			while($row = mysql_fetch_assoc($result)) {
+			while($row = @mysql_fetch_assoc($result)) {
 				echo "<option value='" . $row['id'] . "'>";
 				echo $row['first'] . " " . $row['last'];
 				echo "</option>";

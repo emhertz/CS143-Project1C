@@ -30,12 +30,12 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	$rating = mysql_real_escape_string($rating, $db_connection);
 	$company = mysql_real_escape_string($company, $db_connection);
 
-	$dir_result = mysql_query("SELECT first, last, dob from Director ORDER BY last");
-	$rating_result = mysql_query("SELECT DISTINCT rating from Movie ORDER BY rating");
-	$genre_result = mysql_query("SELECT DISTINCT genre from MovieGenre ORDER BY genre");
+	$dir_result = @mysql_query("SELECT first, last, dob from Director ORDER BY last");
+	$rating_result = @mysql_query("SELECT DISTINCT rating from Movie ORDER BY rating");
+	$genre_result = @mysql_query("SELECT DISTINCT genre from MovieGenre ORDER BY genre");
 
-	$resID = mysql_query("SELECT id FROM MaxMovieID");
-	$row = mysql_fetch_assoc($resID);
+	$resID = @mysql_query("SELECT id FROM MaxMovieID");
+	$row = @mysql_fetch_assoc($resID);
 	$id = $row['id'];
 	$id = $id + 1;
 	
@@ -44,20 +44,20 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	$name_arr = preg_split("/ /", $director);
 	$dir_find = "SELECT id from Director where first='$name_arr[0]' and last='$name_arr[1]'";
 	
-	$dir_id_res = mysql_query($dir_find);
-	$row = mysql_fetch_assoc($dir_id_res);
+	$dir_id_res = @mysql_query($dir_find);
+	$row = @mysql_fetch_assoc($dir_id_res);
 	$did = $row['id'];
 	$dir_query = "INSERT INTO MovieDirector VALUES($id, $did)";
 	$upd_query = "UPDATE MaxMovieID SET id=$id";
 
-	mysql_query($upd_query, $db_connection);
-	mysql_query($movie_query, $db_connection);
-	mysql_query($dir_query, $db_connection);
+	@mysql_query($upd_query, $db_connection);
+	@mysql_query($movie_query, $db_connection);
+	@mysql_query($dir_query, $db_connection);
 	
 	if($genre) {
 		foreach ($genre as $g) {	
 			$genre_query = "INSERT INTO MovieGenre VALUES($id, '$g')";
-			mysql_query($genre_query, $db_connection);
+			@mysql_query($genre_query, $db_connection);
 		}
 	}
 

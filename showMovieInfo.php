@@ -17,7 +17,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 
 	mysql_select_db("CS143", $db_connection);
 
-	$result = mysql_query("SELECT title, year, id FROM Movie ORDER BY title", $db_connection);
+	$result = @mysql_query("SELECT title, year, id FROM Movie ORDER BY title", $db_connection);
 	if(!$result) {
 		$message = "Invalid query: " . mysql_error() . "\n";
 		die($message);
@@ -33,7 +33,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			Movie:
 			<select name="movie">
 			<?php
-			while($row = mysql_fetch_assoc($result)) {
+			while($row = @mysql_fetch_assoc($result)) {
 				echo "<option value='" . $row['id'] . "'>";
 				echo $row['title'];
 				echo "</option>";

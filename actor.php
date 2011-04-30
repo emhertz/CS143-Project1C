@@ -15,7 +15,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 
 	mysql_select_db("CS143", $db_connection);
 
-	$result = mysql_query("SELECT * FROM Actor WHERE id = " . $id, $db_connection);
+	$result = @mysql_query("SELECT * FROM Actor WHERE id = " . $id, $db_connection);
 	if(!$result) {
 		$message = "Invalid query: " . mysql_error() . "\n";
 		die($message);
@@ -31,13 +31,13 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		<?php
 			$submit = $_POST["submit"];
 			
-			$row = mysql_fetch_assoc($result);
+			$row = @mysql_fetch_assoc($result);
 			echo "Name: " . $row['first'] . " " . $row['last'] . "<br>";
 			echo "Sex: " . $row['sex'] . "<br>";
 			echo "DOB: " . $row['dob'] . "<br>";
 			echo "DOD: " . $row['dod'] . "<br>";
 			
-			$roles = mysql_query("SELECT role, title, id FROM Movie, MovieActor where aid = ". $id . " and mid = id", $db_connection);
+			$roles = @mysql_query("SELECT role, title, id FROM Movie, MovieActor where aid = ". $id . " and mid = id", $db_connection);
 			if (!$roles) {
 				$message = "Invalid query: " . mysql_error() . "\n";
 				die($message);
@@ -49,14 +49,14 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			$i = 0;
 			print "<tr align='center'><td><font color='FFFFFF'><u>Role</u></font></td><td><font color='FFFFFF'><u>Movie</u></font></td></tr>";
 				
-			while ($movie_row = mysql_fetch_row($roles)) {
+			while ($movie_row = @mysql_fetch_row($roles)) {
 				print "<tr align='center'>";
 				$curr_id = $movie_row[2];
 				$form_name = "movieForm" . $curr_id; 
 				print "<form name='$form_name' method='POST' action='./movie.php'>";
 	
 				$i = 0;
-				while ($i < mysql_num_fields($roles)) {
+				while ($i < @mysql_num_fields($roles)) {
 					if ($movie_row[$i] == "") {
 						print "<td>N/A</td>";
 					} else if( $i == 1 ){

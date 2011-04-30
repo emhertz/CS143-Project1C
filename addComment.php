@@ -24,13 +24,13 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 
 	$movie_query = "SELECT * from Movie order by title";
 	
-	$movie_res = mysql_query($movie_query, $db_connection);
+	$movie_res = @mysql_query($movie_query, $db_connection);
 
 	$id = 0;
 
 	if($title) {
 		$movie_query_new = "SELECT id from Movie where title='$title'";
-		$movie_res_new = mysql_query($movie_query_new, $db_connection);
+		$movie_res_new = @mysql_query($movie_query_new, $db_connection);
 		$row = mysql_fetch_assoc($movie_res_new);
 		$id = $row['id'];
 	
@@ -40,7 +40,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		$rating = mysql_real_escape_string($rating, $db_connection);
 
 		$query = "INSERT INTO Review VALUES('$name', CURRENT_TIMESTAMP(), $id, $rating, '$comment')";
-		$result = mysql_query($query, $db_connection);
+		$result = @mysql_query($query, $db_connection);
 	}	
 ?>
 

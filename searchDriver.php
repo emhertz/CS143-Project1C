@@ -15,8 +15,8 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			print "<td><font color='FFFFFF'><b>" . "No arguments provided." . "</b></font></td>";
 			print "</tr></table";
 		} else {
-			while($i < mysql_num_fields($result)) {
-				print "<td><font color='FFFFFF'><b>" . mysql_field_name($result, $i) . "</b></font</td>";
+			while($i < @mysql_num_fields($result)) {
+				print "<td><font color='FFFFFF'><b>" . @mysql_field_name($result, $i) . "</b></font</td>";
 				$i++;
 			}
 			print "</tr>";
@@ -28,12 +28,12 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			$value = $arr[0];
 
 			$ind = 0;
-			while($row = mysql_fetch_row($result)) {
+			while($row = @mysql_fetch_row($result)) {
 				print "<tr align='center'>";
 				$i = 0;
 				$form_name = "myForm" . $ind;
 				print "<form name='myForm".$ind."' method='POST' action='".$type."'>";
-				while($i < mysql_num_fields($result)) {
+				while($i < @mysql_num_fields($result)) {
 					if($i == 0) {
 						print "<input type='hidden' name='".$value."' value='$row[$i]'/>";
 						print "<td align='center'><font color='FFFFFF'>";
@@ -119,7 +119,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 
 		if($append == 1) {
-			$result_actor = mysql_query($base_query, $db_connection);
+			$result_actor = @mysql_query($base_query, $db_connection);
 		} else {
 			$result_actor = 0;
 		}
@@ -157,7 +157,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 
 		if($append == 1) {
-			$result_director = mysql_query($base_query_director, $db_connection);
+			$result_director = @mysql_query($base_query_director, $db_connection);
 		} else {
 			$result_director = 0;
 		}		
@@ -221,7 +221,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		}
 
 		if($append == 1) {
-			$result_movie = mysql_query($base_query_movie, $db_connection);
+			$result_movie = @mysql_query($base_query_movie, $db_connection);
 		} else {
 			$result_movie = 0;
 		}

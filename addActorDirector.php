@@ -14,7 +14,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	$dob = $_POST["dob"];
 	$dod = $_POST["dod"];
 
-	$db_connection = mysql_connect("localhost", "cs143", "");
+	$db_connection = @mysql_connect("localhost", "cs143", "");
 	if(!$db_connection) {
 		$err_msg = mysql_error($db_connection);
 		print "Connection failed: $errmsg <br/>";
@@ -32,45 +32,45 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	$dod = mysql_real_escape_string($dod, $db_connection);
 
 	if($identity == "Actor") {
-		$resID = mysql_query("SELECT id FROM MaxPersonID");
-		$row = mysql_fetch_assoc($resID);
+		$resID = @mysql_query("SELECT id FROM MaxPersonID");
+		$row = @mysql_fetch_assoc($resID);
 		$id = $row['id'];
 		$id = $id + 1;
-		$result = mysql_query("INSERT INTO Actor VALUES($id, '$last', '$first', '$sex', '$dob', '$dod')");
+		$result = @mysql_query("INSERT INTO Actor VALUES($id, '$last', '$first', '$sex', '$dob', '$dod')");
 		if($result) {
 
 		} else {
 
 		}
-		mysql_query("UPDATE MaxPersonID SET id=$id");
+		@mysql_query("UPDATE MaxPersonID SET id=$id");
 	} else if($identity == "Director") {
-		$resID = mysql_query("SELECT id from MaxPersonID");
-		$row = mysql_fetch_assoc($resID);
+		$resID = @mysql_query("SELECT id from MaxPersonID");
+		$row = @mysql_fetch_assoc($resID);
 		$id = $row['id'];
 		$id = $id + 1;
-		$result = mysql_query("INSERT INTO Director VALUES($id, '$last', '$first', '$dob', '$dod')");
+		$result = @mysql_query("INSERT INTO Director VALUES($id, '$last', '$first', '$dob', '$dod')");
 		if($result) {
 		} else {
 		}
 		mysql_query("UPDATE MaxPersonID SET id=$id");
 	} else if($identity == "Both") {
-		$resID = mysql_query("SELECT id FROM MaxPersonID");
-		$row = mysql_fetch_assoc($resID);
+		$resID = @mysql_query("SELECT id FROM MaxPersonID");
+		$row = @mysql_fetch_assoc($resID);
 		$id = $row['id'];
 		$id = $id + 1;
-		$result = mysql_query("INSERT INTO Actor VALUES($id, '$last', '$first', '$sex', '$dob', '$dod')");
+		$result = @mysql_query("INSERT INTO Actor VALUES($id, '$last', '$first', '$sex', '$dob', '$dod')");
 		if($result) {
 
 		} else {
 
 		}
-		$result = mysql_query("INSERT INTO Director VALUES($id, '$last', '$first', '$dob', '$dod')");
+		$result = @mysql_query("INSERT INTO Director VALUES($id, '$last', '$first', '$dob', '$dod')");
 		if($result) {
 
 		} else {
 
 		}
-		mysql_query("UPDATE MaxPersonID SET id=$id");
+		@mysql_query("UPDATE MaxPersonID SET id=$id");
 	} else {
 
 	}	
