@@ -7,6 +7,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 <title>CS 143 Movie Database</title>
 
 <?php
+	$entered_id = $_POST["movie"];
 	$comment = $_POST["comment"];
 	$title = $_POST["title"];
 	$name = $_POST["name"];
@@ -22,6 +23,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	mysql_select_db("CS143", $db_connection);
 
 	$movie_query = "SELECT * from Movie order by title";
+	
 	$movie_res = mysql_query($movie_query, $db_connection);
 
 	$id = 0;
@@ -52,7 +54,12 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			<?php
 				while($row = mysql_fetch_assoc($movie_res)) {
 					$title = $row['title'];
-					print "<option value='".$title."'>$title</option>";
+					$r_id = $row['id'];
+					if($entered_id == $r_id) {
+						print "<option value='".$title."' selected='selected'>$title</option>";
+					} else {
+						print "<option value='".$title."' id='".$r_id."'>$title</option>";
+					}
 				}
 			?>
 			</select><br/>

@@ -1,5 +1,5 @@
 <html>
-<body>
+<body link="FFFFFF" alink="FFFFFF" vlink="FFFFFF">
 
 <?php
 require($DOCUMENT_ROOT . "./menu_bar.html");
@@ -23,11 +23,26 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	$dir_info = mysql_query("SELECT * FROM Director where id in (SELECT did FROM MovieDirector where mid = $id)");
 	$comment = mysql_query("SELECT * FROM Review where mid = $id");
 	
-
+	$average_rank = mysql_query("SELECT AVG(rating) AS rating from Review where mid = " . $id);
+	$rank_result = mysql_fetch_assoc($average_rank);
+	$avg = $rank_result['rating'];
 ?>
+
+<script type='text/javascript'>
+
+function sendForm1(form, id) {
+	form.addChild(document.createTextNode("<input type='hidden' name='actor' value='id'>"));
+	alert(id);
+	form.submit();
+	return false;
+}
+
+</script>
+
 <title>CS 143 Movie Database</title>
 
 <link rel="stylesheet" type="text/css" media="all" href="searchsm.css">
+
 <table align="center" width="650" class="searchtablesm" bgcolor="0038A8">
 	<tr bgcolor="0038A8">
 		<td align="center" colspan="5"><font color="FFFFFF">
@@ -37,6 +52,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		echo "Year: " . $row['year'] . "<br>";
 		echo "MPAA Rating: " . $row['rating'] . "<br>";
 		echo "Company: " . $row['company'] . "<br>";
+		echo "Average Rank: " . $avg . "<br>";
 		?> 
 		</font>
 		</td>
@@ -72,10 +88,14 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 	<?php
 		while($row = mysql_fetch_assoc($actor)) {
 			$row_info = mysql_fetch_assoc($actor_info);
+			$id = $row_info['id'];
+			$form_name = "actorForm" . $id;
 			print "<tr bgcolor='0038A8'>";
+			print "<form name='$form_name' method='POST' action='./actor.php'>";
+			print "<input type='hidden' name='actor' value='$id'>";
 			print "<td align='center'><font color='FFFFFF'>";
-			print "Name: " . $row_info['first'] . " " . $row_info['last'];
-			print "</td><td align='center'><font color='FFFFFF'>";
+			print "<a href='#' onclick='document.$form_name.submit();return false;'>Name: " . $row_info['first'] . " " . $row_info['last'];
+			print "</a></td><td align='center'><font color='FFFFFF'>";
 			print "Sex: " . $row_info['sex'];
 			print "</td><td align='center'><font color='FFFFFF'>";
 			print "DOB: " . $row_info['dob'];
@@ -83,11 +103,13 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			print "DOD: " . $row_info['dod'];
 			print "</td><td align='center'><font color='FFFFFF'>";
 			print "Role: " . $row['role'];
-			print "</td></tr>";
+			print "</td></tr></form>";
 		}
 	?>		
 </table>
+</form>
 <br/>
+<form name="reviewForm" method="POST" action="./addComment.php">
 <table align="center" width="650" class="searchtablesm" bgcolor="0038A8">
 	<tr bgcolor="0038A8">
 		<td align="center" colspan="5"><font color="FFFFFF">
@@ -95,8 +117,8 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 		</td>
 	</tr>
 	<?php
-		while($row = mysql_fetch_assoc($comment)) {
-			$row_info = mysql_fetch_assoc($comment);
+		print "<input type='hidden' name='movie' value='$id'/>";
+		while($row_info = mysql_fetch_assoc($comment)) {
 			print "<tr bgcolor='0038A8'>";
 			print "<td align='center'><font color='FFFFFF'>";
 			print "Reviewer: " . $row_info['name'];
@@ -113,6 +135,11 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			print "</td></tr>";
 		}
 	?>
+	<tr bgcolor="0038A8">
+		<td align="right" colspan="3"><font color="FFFFFF">
+		<input type="submit" value="Add a comment!"/>
+		</td>
+	</tr>
 </table>
 
 </body>

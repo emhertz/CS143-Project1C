@@ -24,15 +24,17 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			while($row = mysql_fetch_row($result)) {
 				print "<tr align='center'>";
 				$i = 0;
+				print "<form name='myForm".$i."' action='POST'>";
 				while($i < mysql_num_fields($result)) {
 					if($row[$i] == "") {
 						print "<td><font color='FFFFFF'>N/A</font></td>";
 					} else {
+						
 						print "<td><font color='FFFFFF'>" . $row[$i] . "</font></td>";
 					}
 					$i++;
 				}
-				print "</tr>\n";
+				print "</form></tr>\n";
 			}
 			print "</table>";
 		}
@@ -102,7 +104,6 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			$result_actor = 0;
 		}
 
-		print $base_query . "\n";
 		$append = 0;
 
 		$base_query_director = "SELECT * From Director WHERE ";
@@ -139,11 +140,7 @@ require($DOCUMENT_ROOT . "./menu_bar.html");
 			$result_director = mysql_query($base_query_director, $db_connection);
 		} else {
 			$result_director = 0;
-		}
-		
-		print $base_query_director . "\n";
-
-		
+		}		
 
 		print "<link rel='stylesheet' type='text/css' media='all' href='searchsm.css'>";
 		print "<table align='center' width='650' class='searchtablesm' bgcolor='0038A8'>";
